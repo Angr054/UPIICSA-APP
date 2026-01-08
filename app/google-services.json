@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "875188184122",
+    "project_id": "upiicsa-app",
+    "storage_bucket": "upiicsa-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875188184122:android:643e9a935bfe3470f24103",
+        "android_client_info": {
+          "package_name": "com.areyesm.upiicsaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875188184122-212qlco1f8nkn48rq273t6pv2e7imsct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRPlLxacdna_UFkx5pxD-RY2nFfrN-uqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875188184122-212qlco1f8nkn48rq273t6pv2e7imsct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

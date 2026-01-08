@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Upiicsa App</string>
+
+    <!-- String para el Web Client de Google Sign In -->
+    <string name="default_web_client_id">875188184122-212qlco1f8nkn48rq273t6pv2e7imsct.apps.googleusercontent.com</string>
+
+    <!-- String para Facebook Auth -->
+    <string name="facebook_app_id">2081726789251163</string>
+    <string name="facebook_client_token">6aa2af4599b4e83dc4985ef83ff86ad0</string>
+
 </resources>
