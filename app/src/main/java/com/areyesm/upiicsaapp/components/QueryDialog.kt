@@ -34,11 +34,6 @@ fun QueryDialog(
     isLoading: Boolean,
     onQueryChange: (String) -> Unit
 ) {
-    LaunchedEffect(query) {
-        if (query.isNotBlank()) {
-            onQueryChange(query)
-        }
-    }
 
     BasicAlertDialog(
         onDismissRequest = onDismiss

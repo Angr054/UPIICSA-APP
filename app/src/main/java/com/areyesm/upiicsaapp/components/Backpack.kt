@@ -24,11 +24,16 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,6 +66,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.areyesm.upiicsaapp.R
+import com.areyesm.upiicsaapp.model.TaskModel
 import com.areyesm.upiicsaapp.ui.imageuri.createImageUri
 import com.areyesm.upiicsaapp.ui.theme.BackpackItemColor
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient1
@@ -70,11 +76,12 @@ import com.areyesm.upiicsaapp.ui.theme.Green40
 import com.areyesm.upiicsaapp.ui.theme.Yellow40
 import com.areyesm.upiicsaapp.ui.theme.gray100
 import com.areyesm.upiicsaapp.viewModel.BackpackViewModel
+import com.areyesm.upiicsaapp.viewModel.TaskViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Backpack(
-    viewModel: BackpackViewModel = viewModel(),
+    viewModel: BackpackViewModel = viewModel()
 ) {
 
     var selectedImage by remember { mutableStateOf<String?>(null) }
@@ -261,18 +268,52 @@ fun UploadImageButton(
     }
 }
 
+@Composable
+fun UploadTaskButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    loading: Boolean
+) {
+    Surface(
+        modifier = modifier.size(56.dp),
+        shape = CircleShape,
+        color = Yellow40,
+        onClick = onClick,
+        enabled = !loading
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color.Black,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.outline_checklist_rtl_24),
+                    contentDescription = "Seleccionar imagen",
+                    tint = Color.Unspecified
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun UploadImages(
     onPickFromGallery: () -> Unit,
     onTakePhoto: () -> Unit,
-    loading: Boolean
+    loading: Boolean,
+    taskViewModel: TaskViewModel = viewModel()
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        var showTaskDialog by remember { mutableStateOf(false) }
+
 
         UploadImageButton(
             onClick = onPickFromGallery,
@@ -303,6 +344,20 @@ fun UploadImages(
                     )
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        UploadTaskButton(
+            onClick = { showTaskDialog = true },
+            loading = loading
+        )
+
+        if (showTaskDialog) {
+            TaskDialog(
+                onDismiss = { showTaskDialog = false },
+                viewModel = taskViewModel
+            )
         }
     }
 }
@@ -597,6 +652,131 @@ fun DeleteDialog(
                     ) {
                         Text("Eliminar")
                     }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TaskDialog(
+    onDismiss: () -> Unit,
+    viewModel: TaskViewModel
+) {
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+
+    BasicAlertDialog(
+        onDismissRequest = onDismiss
+    ) {
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = gray100,
+            tonalElevation = 6.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .heightIn(max = 500.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                Text(
+                    text = "Mis Tareas",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                DefaultTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = title,
+                    onValueChange = { title = it },
+                    label = "Título",
+                    icon = Icons.Default.Create
+                )
+
+                DefaultTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = description,
+                    onValueChange = { description = it },
+                    label = "Descripción",
+                    icon = Icons.Default.Info
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorGradient1)
+                    ) {
+                        Text("Cancelar")
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
+                    TextButton(
+                        onClick = {
+                            viewModel.saveTask(title, description)
+                            title = ""
+                            description = ""
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Green40)
+                    ) {
+                        Text("Guardar")
+                    }
+                }
+
+                // Lista de tareas
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(viewModel.tasks) { task ->
+                        TaskItemDialog(
+                            task = task,
+                            onEdit = {
+                                title = task.title
+                                description = task.description
+                                viewModel.selectTask(task)
+                            },
+                            onDelete = {
+                                viewModel.deleteTask(task.id)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TaskItemDialog(
+    task: TaskModel,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = Color.White,
+        tonalElevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(task.title, fontWeight = FontWeight.Bold)
+            Text(task.description, fontSize = 12.sp)
+
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = onEdit) {
+                    Text("Editar")
+                }
+                TextButton(onClick = onDelete) {
+                    Text("Eliminar", color = Color.Red)
                 }
             }
         }

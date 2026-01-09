@@ -90,6 +90,9 @@ dependencies {
     // Dependency for the Cloud Firestore library
     implementation("com.google.firebase:firebase-firestore")
 
+    // Dependency for the Realtime Database library
+    implementation("com.google.firebase:firebase-database")
+
     // Material Icons
     implementation (libs.androidx.compose.material.icons.core)
 

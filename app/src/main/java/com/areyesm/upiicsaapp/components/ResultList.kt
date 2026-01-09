@@ -1,6 +1,7 @@
 package com.areyesm.upiicsaapp.components
 
 import android.app.appsearch.SearchResult
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.areyesm.upiicsaapp.model.QueryModel
+import com.areyesm.upiicsaapp.ui.theme.Yellow40
 
 @Composable
 fun ResultsList(
@@ -44,7 +46,8 @@ fun ResultItem(
             .fillMaxWidth()
             .clickable { },
         shape = RoundedCornerShape(16.dp),
-        tonalElevation = 1.dp
+        tonalElevation = 1.dp,
+        color = Yellow40
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

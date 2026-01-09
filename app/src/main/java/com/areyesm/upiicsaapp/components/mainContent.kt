@@ -150,36 +150,5 @@ private fun mainContentHeader(
                 )
             )
         }
-        //RefreshButton()
-    }
-}
-
-@Composable
-private fun RefreshButton(
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        color = ColorSurface,
-        shape = CircleShape,
-        modifier = modifier
-            .size(32.dp)
-            .customShadow(
-                color = ColorShadowPrimary,
-                alpha = 0.30f,
-                shadowRadius = 16.dp,
-                borderRadius = 32.dp,
-                offsetY = 4.dp
-            ),
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.outline_refresh_24),
-                contentDescription = "Refresh",
-                modifier = Modifier.size(18.dp)
-            )
-        }
     }
 }

@@ -9,7 +9,11 @@ class QueryRepository {
     private val db = FirebaseFirestore.getInstance()
     private val collectionRef = db.collection("aulas")
 
-    fun searchQuery(queryText: String, onResult: (List<QueryModel>) -> Unit, onError: (Exception) -> Unit) {
+    fun searchQuery(
+        queryText: String,
+        onResult: (List<QueryModel>) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         collectionRef
             .get()
             .addOnSuccessListener { snapshot ->
@@ -23,18 +27,19 @@ class QueryRepository {
                         aula = doc.getString("aula") ?: ""
                     )
                 }
-                Log.d("QueryRepo", "Todos los items: $allItems")
+
                 val list = allItems.filter { item ->
                     item.materia.contains(queryText, ignoreCase = true) ||
                             item.secuencia.contains(queryText, ignoreCase = true) ||
                             item.profesor.contains(queryText, ignoreCase = true)
                 }
-                Log.d("QueryRepo", "Filtrados: $list")
 
+                onResult(list)
             }
             .addOnFailureListener { e ->
                 onError(e)
             }
     }
+
 
 }
