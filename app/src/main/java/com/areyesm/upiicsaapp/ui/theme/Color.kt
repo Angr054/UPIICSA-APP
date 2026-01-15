@@ -1,6 +1,10 @@
 package com.areyesm.upiicsaapp.ui.theme
 
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 
 val gray100 = Color(0xFFFFFFFF)
@@ -17,6 +21,8 @@ val Pink40 = Color(0xFF7D5260)
 val ColorGradient1 = Color(0xFFFFF9BE)
 val ColorGradient2 = Color(0xFFD0FA5B)
 val ColorGradient3 = Color(0xFFCCFFD3)
+val ColorGradient4 = Color(0xFFEAFFED)
+val Red30 = Color(0xFFFF9393)
 
 val Yellow40 = Color(0xFFFFF35E).copy(alpha = 0.4f)
 val BackpackItemColor = Color(0xFFA5FFF2).copy(alpha = 0.4f)
@@ -34,3 +40,9 @@ val ColorTextPrimaryVariant = ColorTextPrimary.copy(alpha = 0.7f)
 val ColorTextSecondary = Color.Black
 val ColorTextSecondaryVariant = ColorTextSecondary.copy(alpha = 0.7f)
 val ColorTextAction = ColorGradient2
+
+val pending = Color(0xFFFFFAA4)
+val pendingSelected = Color(0xFFFDED80)
+val completed = Color(0xFFE4FFE1)
+val completedSelected = Color(0xFFB4FFC1)
+

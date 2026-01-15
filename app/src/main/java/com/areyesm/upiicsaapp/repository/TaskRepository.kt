@@ -1,47 +1,119 @@
 package com.areyesm.upiicsaapp.repository
 
 import com.areyesm.upiicsaapp.model.TaskModel
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import java.util.UUID
 
 class TaskRepository {
 
-    private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = Firebase.firestore
 
-    private fun tasksRef(): CollectionReference {
-        val uid = auth.currentUser?.uid
-            ?: throw IllegalStateException("Usuario no autenticado")
+    private fun uid(): String? = auth.currentUser?.uid
 
-        return db
-            .collection("users")
-            .document(uid)
-            .collection("tasks")
-    }
+    private fun taskRef(userId: String) =
+        firestore.collection("tasks")
+            .document(userId)
+            .collection("user_tasks")
 
-    fun observeTasks(onResult: (List<TaskModel>) -> Unit) {
-        tasksRef().addSnapshotListener { snapshot, error ->
-            if (error != null || snapshot == null) return@addSnapshotListener
+    fun getTasks(
+        onSuccess: (List<TaskModel>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userId = uid() ?: return onError("Usuario no autenticado")
 
-            val tasks = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(TaskModel::class.java)
-                    ?.copy(id = doc.id)
+        taskRef(userId)
+            .orderBy("createdAt")
+            .get()
+            .addOnSuccessListener {
+                onSuccess(it.toObjects(TaskModel::class.java))
             }
-            onResult(tasks)
-        }
+            .addOnFailureListener {
+                onError(it.localizedMessage ?: "Error cargando tareas")
+            }
     }
 
-    fun addTask(task: TaskModel) {
-        tasksRef().add(task)
+    fun addTask(
+        name: String,
+        details: String,
+        dueDate: Long,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userId = uid() ?: return onError("Usuario no autenticado")
+
+        val id = UUID.randomUUID().toString()
+        val task = TaskModel(
+            id = id,
+            name = name,
+            details = details,
+            dueDate = dueDate,
+            createdAt = System.currentTimeMillis()
+        )
+
+        taskRef(userId).document(id)
+            .set(task)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener {
+                onError(it.localizedMessage ?: "Error guardando tarea")
+            }
     }
 
-    fun updateTask(task: TaskModel) {
-        tasksRef().document(task.id).set(task)
+    fun deleteTask(
+        taskId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userId = uid() ?: return onError("Usuario no autenticado")
+
+        taskRef(userId).document(taskId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener {
+                onError(it.localizedMessage ?: "Error eliminando tarea")
+            }
     }
 
-    fun deleteTask(taskId: String) {
-        tasksRef().document(taskId).delete()
+    fun updateTask(
+        taskId: String,
+        name: String,
+        details: String,
+        dueDate: Long,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userId = uid() ?: return onError("Usuario no autenticado")
+
+        taskRef(userId).document(taskId)
+            .update(
+                mapOf(
+                    "name" to name,
+                    "dueDate" to dueDate
+                )
+            )
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener {
+                onError(it.localizedMessage ?: "Error actualizando tarea")
+            }
     }
+
+    fun setTaskCompleted(
+        taskId: String,
+        completed: Boolean,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userId = uid() ?: return onError("Usuario no autenticado")
+
+        taskRef(userId).document(taskId)
+            .update("completed", completed)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener {
+                onError(it.localizedMessage ?: "Error actualizando tarea")
+            }
+    }
+
+
 }
-

@@ -10,9 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.areyesm.upiicsaapp.navigation.AppNavigation
 import com.areyesm.upiicsaapp.ui.theme.UpiicsaAppTheme
+import com.areyesm.upiicsaapp.viewModel.CampusViewModel
 import com.areyesm.upiicsaapp.viewModel.FacebookLoginViewModel
 import com.areyesm.upiicsaapp.viewModel.GithubLoginViewModel
 import com.areyesm.upiicsaapp.viewModel.GoogleLoginViewModel
+import com.areyesm.upiicsaapp.viewModel.LocationViewModel
 import com.areyesm.upiicsaapp.viewModel.LoginViewModel
 import com.areyesm.upiicsaapp.viewModel.PhoneLoginViewModel
 import com.facebook.CallbackManager
@@ -40,6 +42,8 @@ class MainActivity : ComponentActivity() {
         val googleLoginVM: GoogleLoginViewModel by viewModels()
         val facebookLoginVM: FacebookLoginViewModel by viewModels()
         val githubLoginVM: GithubLoginViewModel by viewModels()
+        val campusVM: CampusViewModel by viewModels()
+        val locationVM: LocationViewModel by viewModels()
 
         // Registro único Callback de Facebook
         facebookLoginVM.registerFacebookCallback(callbackManager)
@@ -55,7 +59,9 @@ class MainActivity : ComponentActivity() {
                     phoneLoginVM,
                     googleLoginVM,
                     facebookLoginVM,
-                    githubLoginVM
+                    githubLoginVM,
+                    campusVM,
+                    locationVM
                 )
             }
         }

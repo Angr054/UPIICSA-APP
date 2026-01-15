@@ -1,19 +1,11 @@
 package com.areyesm.upiicsaapp.view
 
-import android.app.Activity
-import android.content.Context
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,9 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +41,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.areyesm.upiicsaapp.R
@@ -61,11 +49,9 @@ import com.areyesm.upiicsaapp.components.DefaultButton
 import com.areyesm.upiicsaapp.components.DefaultTextField
 import com.areyesm.upiicsaapp.components.SocialLoginRow
 import com.areyesm.upiicsaapp.navigation.AppScreen
-import com.areyesm.upiicsaapp.ui.auth.getGoogleSignInClient
 import com.areyesm.upiicsaapp.ui.theme.ColorBackground
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient1
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient3
-import com.areyesm.upiicsaapp.ui.theme.Green40
 import com.areyesm.upiicsaapp.ui.theme.gray100
 import com.areyesm.upiicsaapp.viewModel.FacebookLoginViewModel
 import com.areyesm.upiicsaapp.viewModel.GithubLoginViewModel
@@ -267,7 +253,7 @@ fun RegisterText(navController: NavController) {
         Text(
             modifier = Modifier.clickable {
                 navController.navigate(route = AppScreen.Signup.route) {
-                    launchSingleTop = true //Evita crear distintas instancias de SignUpView
+                    launchSingleTop = true
                 }
             },
             text = "Registrate",
@@ -285,9 +271,7 @@ fun ResetPasswordDialog(
     onSend: (String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
-    BasicAlertDialog(
-        onDismissRequest = onDismiss
-    ){
+    BasicAlertDialog(onDismissRequest = onDismiss){
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = gray100,
@@ -313,11 +297,15 @@ fun ResetPasswordDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = ColorGradient3)) {
+                    TextButton(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorGradient3)) {
                         Text("Cancelar")
                     }
                     Spacer(modifier = Modifier.width(5.dp))
-                    TextButton(onClick = { onSend(email) }, colors = ButtonDefaults.buttonColors(containerColor = ColorGradient1)) {
+                    TextButton(
+                        onClick = { onSend(email) },
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorGradient1)) {
                         Text("Enviar")
                     }
                 }

@@ -1,6 +1,5 @@
 package com.areyesm.upiicsaapp.view
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,7 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.areyesm.upiicsaapp.R
-import com.areyesm.upiicsaapp.components.CustomDivider
 import com.areyesm.upiicsaapp.components.DefaultButton
 import com.areyesm.upiicsaapp.components.DefaultTextField
 import com.areyesm.upiicsaapp.components.customShadow

@@ -65,39 +65,45 @@ dependencies {
     implementation(platform(libs.firebase.bom))
 
     // Dependency for the Firebase Authentication library
-    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.firebase.auth)
 
     // Dependency for Google Sign-In
     // https://firebase.google.com/docs/auth/android/google-signin?hl=es-419
-    implementation("com.google.android.gms:play-services-auth:21.4.0")
+    implementation(libs.play.services.auth)
 
     // Dependency for the Cloud Firestore library
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.firestore)
 
     // Dependencies for the Credential Manager libraries
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // Dependency for Facebook Auth
     // https://developers.facebook.com/docs/facebook-login/android
     // https://firebase.google.com/docs/auth/android/facebook-login?hl=es-419
-    implementation("com.facebook.android:facebook-login:latest.release")
+    implementation(libs.facebook.login)
 
     // Dependency for the Cloud Storage library
-    implementation("com.google.firebase:firebase-storage")
+    implementation(libs.firebase.storage)
 
     // Dependency for the Cloud Firestore library
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.google.firebase.firestore)
 
     // Dependency for the Realtime Database library
-    implementation("com.google.firebase:firebase-database")
+    implementation(libs.firebase.database)
 
     // Material Icons
     implementation (libs.androidx.compose.material.icons.core)
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation(libs.coil.compose)
+
+    // Dependency for SplashScreen
+    implementation(libs.androidx.core.splashscreen)
+
+    //Dependency for location
+    implementation(libs.play.services.location)
 
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.foundation.layout)

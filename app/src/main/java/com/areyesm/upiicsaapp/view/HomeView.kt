@@ -20,10 +20,12 @@ import com.areyesm.upiicsaapp.components.FooterBar
 import com.areyesm.upiicsaapp.components.MainContent
 import com.areyesm.upiicsaapp.model.HomeModel
 import com.areyesm.upiicsaapp.ui.theme.ColorBackground
+import com.areyesm.upiicsaapp.viewModel.CampusViewModel
+import com.areyesm.upiicsaapp.viewModel.LocationViewModel
 import com.areyesm.upiicsaapp.viewModel.LoginViewModel
 
 @Composable
-fun HomeView(navController: NavHostController, loginVM: LoginViewModel) {
+fun HomeView(navController: NavHostController, loginVM: LoginViewModel, campusVM: CampusViewModel, locationVM: LocationViewModel ) {
 
     //Define la sección que será mostrada
     var currentSection by rememberSaveable {
@@ -40,13 +42,15 @@ fun HomeView(navController: NavHostController, loginVM: LoginViewModel) {
                 .padding(paddings)
                 .padding(horizontal = 24.dp, vertical = 10.dp)
         ) {
-            ActionBar(navController, loginVM)
+            ActionBar(navController, loginVM, campusVM)
             Spacer(
                 modifier = Modifier.height(15.dp)
             )
             MainContent(
                 modifier = Modifier.weight(1f),
-                section = currentSection
+                section = currentSection,
+                campusVM = campusVM,
+                locationVM = locationVM
             )
             Spacer(
                 modifier = Modifier.height(24.dp)

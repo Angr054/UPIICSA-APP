@@ -1,7 +1,6 @@
 package com.areyesm.upiicsaapp.components
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,9 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.areyesm.upiicsaapp.R
-import com.areyesm.upiicsaapp.model.QueryModel
 import com.areyesm.upiicsaapp.navigation.AppScreen
-import com.areyesm.upiicsaapp.ui.auth.getGoogleSignInClient
+import com.areyesm.upiicsaapp.utils.getGoogleSignInClient
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient1
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient2
 import com.areyesm.upiicsaapp.ui.theme.ColorGradient3
@@ -52,21 +49,22 @@ import com.areyesm.upiicsaapp.ui.theme.ColorShadowPrimary
 import com.areyesm.upiicsaapp.ui.theme.ColorSurface
 import com.areyesm.upiicsaapp.ui.theme.ColorTextSecondary
 import com.areyesm.upiicsaapp.ui.theme.gray100
+import com.areyesm.upiicsaapp.viewModel.CampusViewModel
 import com.areyesm.upiicsaapp.viewModel.LoginViewModel
-import com.areyesm.upiicsaapp.viewModel.QueryViewModel
+import com.areyesm.upiicsaapp.viewModel.ScheduleViewModel
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 
 //Columna que almacena todos los elementos de la barra de acciones
 @Composable
-fun ActionBar(navController: NavController, loginVM: LoginViewModel) {
+fun ActionBar(navController: NavController, loginVM: LoginViewModel, campusVM: CampusViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         SearchButton()
-        TitleText()
+        TitleText(campusVM)
         UserButton(navController, loginVM)
     }
 }
@@ -74,7 +72,7 @@ fun ActionBar(navController: NavController, loginVM: LoginViewModel) {
 //Botón de busqueda
 @Composable
 private fun SearchButton(
-    viewModel: QueryViewModel = viewModel()
+    viewModel: ScheduleViewModel = viewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
@@ -106,17 +104,10 @@ private fun SearchButton(
         }
     }
     if (showDialog) {
-        val results by viewModel.results.collectAsState()
-        val isLoading by viewModel.isLoading.collectAsState()
-        QueryDialog(
-            onDismiss = { showDialog = false },
-            query = query,
-            results = results,
-            isLoading = isLoading,
-            onQueryChange = {
-                query = it
-                viewModel.onQueryChange(it)
-            }
+        SubjectSearchDialog(
+            subjects = viewModel.subjects,
+            onSelect = { },
+            onDismiss = { showDialog = false }
         )
     }
 }
@@ -164,7 +155,7 @@ private fun UserButton(
         FirebaseAuth.getInstance().signOut()
 
         // Google
-        googleClient.signOut().addOnCompleteListener{}
+        googleClient.signOut().addOnCompleteListener {}
 
         // Facebook
         LoginManager.getInstance().logOut()
@@ -215,17 +206,23 @@ fun UserDialog(
                     fontSize = 18.sp
                 )
 
-                Text("¿Deseas cerrar la sesión? ${(FirebaseAuth.getInstance().currentUser?.email)?:"Visitante"}") //Operador Elvis, si es nulo entonces muestra la cadena visitante
+                Text("¿Deseas cerrar la sesión? ${(FirebaseAuth.getInstance().currentUser?.email) ?: "Visitante"}") //Operador Elvis, si es nulo entonces muestra la cadena visitante
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = ColorGradient1)) {
+                    TextButton(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorGradient1)
+                    ) {
                         Text("Cancelar")
                     }
                     Spacer(modifier = Modifier.width(5.dp))
-                    TextButton(onClick = onLogout, colors = ButtonDefaults.buttonColors(containerColor = ColorGradient3)) {
+                    TextButton(
+                        onClick = onLogout,
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorGradient3)
+                    ) {
                         Text("Cerrar sesión")
                     }
                 }
@@ -235,10 +232,10 @@ fun UserDialog(
 }
 
 
-
 //Texto Superior (Título)
 @Composable
 private fun TitleText(
+    campusVM: CampusViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -264,7 +261,7 @@ private fun TitleText(
             )
         }
 
-        Bar(getLoginProviderLabel())
+        Bar(getLoginProviderLabel(), campusVM)
     }
 }
 
@@ -272,27 +269,32 @@ private fun TitleText(
 //Barra de información
 @Composable
 private fun Bar(
-    label: String
+    label: String,
+    campusVM: CampusViewModel
 ) {
-    Box(
-        modifier = Modifier
-            .background(
-                brush = Brush.linearGradient(
-                    0f to ColorGradient1,
-                    0.25f to ColorGradient2,
-                    1f to ColorGradient3
-                ),
-                shape = RoundedCornerShape(8.dp)
+    Row() {
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        0f to ColorGradient1,
+                        0.25f to ColorGradient2,
+                        1f to ColorGradient3
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(
+                    vertical = 2.dp,
+                    horizontal = 10.dp
+                )
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = ColorTextSecondary.copy(alpha = 0.7f)
             )
-            .padding(
-                vertical = 2.dp,
-                horizontal = 10.dp
-            )
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = ColorTextSecondary.copy(alpha = 0.7f)
-        )
+        }
+        Spacer(modifier = Modifier.width(5.dp))
+        CampusHeader(viewModel = campusVM)
     }
 }

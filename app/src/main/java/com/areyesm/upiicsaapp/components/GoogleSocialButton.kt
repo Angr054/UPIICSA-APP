@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.areyesm.upiicsaapp.navigation.AppScreen
-import com.areyesm.upiicsaapp.ui.auth.getGoogleSignInClient
+import com.areyesm.upiicsaapp.utils.getGoogleSignInClient
 import com.areyesm.upiicsaapp.ui.theme.Green40
 import com.areyesm.upiicsaapp.viewModel.GoogleLoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn

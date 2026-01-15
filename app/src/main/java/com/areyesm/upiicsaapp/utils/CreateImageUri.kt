@@ -1,4 +1,4 @@
-package com.areyesm.upiicsaapp.ui.imageuri
+package com.areyesm.upiicsaapp.utils
 
 import android.content.Context
 import android.net.Uri

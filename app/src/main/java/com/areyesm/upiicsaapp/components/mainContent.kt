@@ -37,12 +37,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.areyesm.upiicsaapp.model.BackpackMenuItem
+import com.areyesm.upiicsaapp.viewModel.CampusViewModel
+import com.areyesm.upiicsaapp.viewModel.LocationViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
-    section: HomeModel
+    section: HomeModel,
+    campusVM: CampusViewModel,
+    locationVM: LocationViewModel
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -68,7 +73,7 @@ fun MainContent(
                 )
                 HomeModel.BACKPACK -> mainContentHeader(
                     icon = R.drawable.book,
-                    title = "Mi Mochila"
+                    title = "Mochila"
                 )
             }
 
@@ -92,7 +97,7 @@ fun MainContent(
                                 .padding(top = 10.dp)
                                 .clip(RoundedCornerShape(18.dp))
                         ){
-                            Map(modifier.fillMaxSize())
+                            Map(modifier.fillMaxSize(), locationVM = locationVM)
                         }
                     }
                     HomeModel.HOME -> {

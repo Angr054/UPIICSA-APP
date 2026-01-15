@@ -1,5 +1,6 @@
 package com.areyesm.upiicsaapp.components
 
+import android.app.DatePickerDialog
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -22,10 +24,15 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 //Extensión de Modifier, sombra personalizada
 //Función estable (Sin cambios en su comportamiento)
@@ -124,3 +131,49 @@ fun getLoginProviderLabel(): String {
         else -> "Desconocido"
     }
 }
+
+@Composable
+fun rememberDatePicker(
+    initialDate: Long,
+    onDateSelected: (Long) -> Unit
+) {
+    val context = LocalContext.current
+    val calendar = remember { Calendar.getInstance() }
+
+    calendar.timeInMillis = initialDate
+
+    val dialog = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, day ->
+                val selected = Calendar.getInstance().apply {
+                    set(year, month, day)
+                }
+                onDateSelected(selected.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        dialog.show()
+    }
+}
+
+fun formatDate(timestamp: Long): String {
+    if (timestamp == 0L) return "Sin fecha"
+
+    val locale = Locale.getDefault()
+    val date = Date(timestamp)
+
+    val dayFormat = SimpleDateFormat("EEEE", locale)
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", locale)
+
+    val dayName = dayFormat.format(date)
+    val fullDate = dateFormat.format(date)
+
+    return "$dayName $fullDate"
+}
+

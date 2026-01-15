@@ -1,7 +1,7 @@
 //Documentación Oficial
 @file:Suppress("DEPRECATION")
 
-package com.areyesm.upiicsaapp.ui.auth
+package com.areyesm.upiicsaapp.utils
 
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

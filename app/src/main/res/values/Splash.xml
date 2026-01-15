@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyApp.Splash" parent="Theme.SplashScreen">
+        <!-- Color de fondo -->
+        <item name="windowSplashScreenBackground">@color/splashBackground</item>
+
+        <!-- Ícono central -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+
+        <!-- Duración animación -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+
+        <!-- Tema que se aplicará luego -->
+        <item name="postSplashScreenTheme">@style/Theme.UpiicsaApp</item>
+    </style>
+
+</resources>

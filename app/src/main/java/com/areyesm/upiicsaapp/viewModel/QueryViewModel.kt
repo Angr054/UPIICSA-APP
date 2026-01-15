@@ -17,10 +17,6 @@ class QueryViewModel(
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun onQueryChange(query: String) {
-        /*if (query.isBlank()) {
-            _results.value = emptyList()
-            return
-        }*/
         _isLoading.value = true
         repository.searchQuery(query,
             onResult = { list ->

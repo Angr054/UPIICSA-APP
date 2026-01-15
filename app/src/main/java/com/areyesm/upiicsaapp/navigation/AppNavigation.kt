@@ -8,9 +8,11 @@ import com.areyesm.upiicsaapp.view.BlankView
 import com.areyesm.upiicsaapp.view.HomeView
 import com.areyesm.upiicsaapp.view.LoginView
 import com.areyesm.upiicsaapp.view.SignUpView
+import com.areyesm.upiicsaapp.viewModel.CampusViewModel
 import com.areyesm.upiicsaapp.viewModel.FacebookLoginViewModel
 import com.areyesm.upiicsaapp.viewModel.GithubLoginViewModel
 import com.areyesm.upiicsaapp.viewModel.GoogleLoginViewModel
+import com.areyesm.upiicsaapp.viewModel.LocationViewModel
 import com.areyesm.upiicsaapp.viewModel.LoginViewModel
 import com.areyesm.upiicsaapp.viewModel.PhoneLoginViewModel
 
@@ -21,7 +23,9 @@ fun AppNavigation(
     phoneLoginVM: PhoneLoginViewModel,
     googleLoginVM: GoogleLoginViewModel,
     facebookLoginVM: FacebookLoginViewModel,
-    githubLoginVM: GithubLoginViewModel
+    githubLoginVM: GithubLoginViewModel,
+    campusVM: CampusViewModel,
+    locationVM: LocationViewModel
 ) {
     NavHost(navController = navController, startDestination = AppScreen.Blank.route){
 
@@ -30,7 +34,7 @@ fun AppNavigation(
         }
 
         composable(AppScreen.Home.route){
-            HomeView(navController = navController, loginVM = loginVM)
+            HomeView(navController = navController, loginVM = loginVM, campusVM = campusVM, locationVM = locationVM)
         }
 
         composable(route = AppScreen.Login.route){
